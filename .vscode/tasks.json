@@ -1,0 +1,53 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "create build directory",
+            "type": "shell",
+            "osx": {
+                "command": "mkdir -p ${config:buildPath}"
+            },
+            "linux": {
+                "command": "mkdir -p ${config:buildPath}"
+            },
+            /*
+            "windows": {
+                "command": "mkdir .\\build\\release", // Not working when folder already exists !
+            },
+            */
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "make (sjasmplus)",
+            "type": "shell",
+            "command": "sjasmplus", // Please add the full path to sjasmplus
+            "args": [
+                "--outprefix=${config:buildPath}/",
+                "--sld=${config:buildPath}/${config:projectName}.sld",
+                "--fullpath",
+                "${workspaceFolder}/src/main.asm"
+            ],
+            "problemMatcher": {
+                "owner": "sjasmplus",
+                "fileLocation": "autoDetect",
+                "pattern": {
+                    "regexp": "^(.*)\\((\\d+)\\):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "message": 4
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "create build directory",
+            ]
+        },
+    ]
+}
